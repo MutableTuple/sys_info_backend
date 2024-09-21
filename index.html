@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Info</title>
+  </head>
+  <body>
+    <h1>System Info</h1>
+    <div id="system-info"></div>
+
+    <script>
+      // Fetch system info from the Flask API
+      async function fetchSystemInfo() {
+        try {
+          const response = await fetch("http://127.0.0.1:5000/api/system_info");
+          const data = await response.json();
+
+          // Display system info on the webpage
+          document.getElementById("system-info").innerHTML = `
+                <h2>CPU Usage: ${data.cpu_usage}%</h2>
+                <h3>Memory</h3>
+                <p>Total Memory: ${(
+                  data.memory.total_memory /
+                  1024 ** 3
+                ).toFixed(2)} GB</p>
+                <p>Used Memory: ${(data.memory.used_memory / 1024 ** 3).toFixed(
+                  2
+                )} GB</p>
+                <p>Available Memory: ${(
+                  data.memory.available_memory /
+                  1024 ** 3
+                ).toFixed(2)} GB</p>
+                <p>Memory Usage: ${data.memory.memory_percentage}%</p>
+                
+                <h3>Disk</h3>
+                <p>Total Disk: ${(data.disk.total_disk / 1024 ** 3).toFixed(
+                  2
+                )} GB</p>
+                <p>Used Disk: ${(data.disk.used_disk / 1024 ** 3).toFixed(
+                  2
+                )} GB</p>
+                <p>Free Disk: ${(data.disk.free_disk / 1024 ** 3).toFixed(
+                  2
+                )} GB</p>
+                <p>Disk Usage: ${data.disk.disk_percentage}%</p>
+            `;
+        } catch (error) {
+          console.error("Error fetching system info:", error);
+        }
+      }
+
+      // Call the function to fetch and display system info every second
+      setInterval(fetchSystemInfo, 1000); // Refresh every 1000 milliseconds (1 second)
+    </script>
+  </body>
+</html>
